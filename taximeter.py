@@ -51,7 +51,7 @@ def taximeter():
             if not trip_activate:
                 print("Error: No active trip. Please start first.")
                 
-                #log de advertencia p/ cuando el usuario  ingresa un comando invalido si no hay un viaje
+                #log de advertencia para cuando el usuario  ingresa un comando invalido si no hay un viaje
                 logger.warning(f"Command '{command}'received but trip nop active.")
                
                 continue
