@@ -1,5 +1,6 @@
 import time
 from logging_setup import setup_logger
+from datetime import datetime
 
 logger = setup_logger()
 
@@ -17,6 +18,28 @@ def calculate_fare(seconds_stopped, seconds_moving):
     logger.info(f"fare clculated: stopped={seconds_stopped:.1f}s, moving={seconds_moving:.1f}s, total={fare:.2f}€")
     
     return fare
+
+def save_history(seconds_stopped, seconds_moving, fare, filename="history.txt"):
+    """"
+    función para guardar en una linea de nuestro archivo =>history.txt, los datos relacionados con un viaje 
+     y utilizamos el modo de apertura "a", para que cree el archivo si no existe o de lo contrario,
+     que lo abra y sin borrar el historico anterior lo  agregue en la ultima linea.
+    """
+    #aqui formateamos los valores para que el archivo sea legible.
+    timestamp = datetime.now().isoformat(sep='T', timespec='seconds')
+    line = f"{timestamp} | stopped: {seconds_stopped:.1f}s | moving: {seconds_moving:.1f}s | fare: €{fare:.2f}\n"
+    
+    try: 
+        with open(filename, 'a', encoding="utf-8") as f: f.write(line)
+        
+        #log para informar que se gurgo correctamente
+        logger.info(f"trip saved to {filename}: {line.strip()}")
+    
+    except Exception as e:
+        # log para registrar un error al escribir en el archivo    
+        
+        logger.error(f"failed to write to {filename}:{e}")
+            
 
 
 def taximeter():
@@ -104,6 +127,9 @@ def taximeter():
             
             # log fin del trayecto
             logger.info(f"Trip finished. Stopped={stopped_time:.1f}s, Moving={moving_time:.1f}s, fare={total_fare:.2f}€")
+            
+            #aqui al terminar el viaje guardamos en nuestro archivo history.txt
+            save_history(stopped_time, moving_time, total_fare)
 
             trip_activate = False
             state = None
