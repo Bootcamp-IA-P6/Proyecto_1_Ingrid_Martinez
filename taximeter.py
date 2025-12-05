@@ -177,7 +177,6 @@ def taximeter():
             
             break
 
-        
         else:
             print("Unknown command. Use: 'start', 'stop', 'move', 'finish', or 'exit'")
             
